@@ -1,7 +1,7 @@
-CREATE DATABASE RentalCarDB;
+CREATE DATABASE CarRental;
 go
 
-USE RentalCarDB;
+USE CarRental;
 go
 
 CREATE TABLE Customers (
@@ -10,6 +10,7 @@ CREATE TABLE Customers (
     ContactInformation VARCHAR(255),
     Address VARCHAR(255)
 );
+GO
 
 CREATE TABLE Cars (
     CarID INT PRIMARY KEY IDENTITY(1,1),
@@ -18,90 +19,90 @@ CREATE TABLE Cars (
     Year INT NOT NULL,
     RentalRatePerDay DECIMAL(10, 2) NOT NULL
 );
+Go
 
 CREATE TABLE Rentals (
     RentalID INT PRIMARY KEY IDENTITY(1,1),
-    CustomerID INT FOREIGN KEY REFERENCES Customers(CustomerID),
-    CarID INT FOREIGN KEY REFERENCES Cars(CarID),
     RentalStartDate DATE NOT NULL,
     RentalEndDate DATE NOT NULL,
-    TotalCost DECIMAL(10, 2)
+    TotalCost DECIMAL(10, 2),
+	CustomerID INT FOREIGN KEY REFERENCES Customers(CustomerID),
+    CarID INT FOREIGN KEY REFERENCES Cars(CarID),
 );
 go
 
-/*Añadiendo Registros*/
-
-INSERT INTO Customers (Name, ContactInformation, Address)
-VALUES
-('John Doe', '555-1234', '123 Elm Street'),
-('Jane Smith', '555-5678', '456 Oak Avenue'),
-('Robert Brown', '555-8765', '789 Maple Lane'),
-('Emily Davis', '555-2345', '321 Pine Road'),
-('Michael Wilson', '555-3456', '654 Cedar Boulevard'),
-('Sarah Johnson', '555-4567', '987 Birch Avenue'),
-('David Lee', '555-5678', '159 Spruce Street'),
-('Karen Garcia', '555-6789', '753 Walnut Avenue'),
-('Paul Martinez', '555-7890', '951 Chestnut Road'),
-('Lisa White', '555-8901', '258 Ash Street'),
-('James Moore', '555-9012', '147 Elm Street'),
-('Anna Taylor', '555-0123', '369 Pine Avenue'),
-('Mark Anderson', '555-2345', '753 Oak Lane'),
-('Sophia Thomas', '555-3456', '951 Maple Boulevard'),
-('William Jackson', '555-4567', '159 Birch Road'),
-('Olivia Harris', '555-5678', '753 Cedar Avenue'),
-('Henry Clark', '555-6789', '951 Spruce Boulevard'),
-('Isabella Rodriguez', '555-7890', '258 Walnut Street'),
-('Lucas Lewis', '555-8901', '147 Ash Avenue'),
-('Mia King', '555-9012', '369 Chestnut Street');
+INSERT INTO Customers (Name, ContactInformation, Address) VALUES
+('John Doe', 'john.doe@example.com', '123 Main St, Springfield'),
+('Jane Smith', 'jane.smith@example.com', '456 Elm St, Springfield'),
+('Alice Johnson', 'alice.j@example.com', '789 Oak St, Springfield'),
+('Bob Brown', 'bob.brown@example.com', '135 Pine St, Springfield'),
+('Charlie Green', 'charlie.green@example.com', '246 Maple St, Springfield'),
+('Daniel White', 'daniel.white@example.com', '357 Birch St, Springfield'),
+('Eva Black', 'eva.black@example.com', '468 Cedar St, Springfield'),
+('Frank Blue', 'frank.blue@example.com', '579 Walnut St, Springfield'),
+('Grace Pink', 'grace.pink@example.com', '680 Chestnut St, Springfield'),
+('Hank Gray', 'hank.gray@example.com', '791 Ash St, Springfield'),
+('Ivy Red', 'ivy.red@example.com', '902 Spruce St, Springfield'),
+('Jack Silver', 'jack.silver@example.com', '213 Fir St, Springfield'),
+('Kathy Gold', 'kathy.gold@example.com', '324 Hemlock St, Springfield'),
+('Liam Yellow', 'liam.yellow@example.com', '435 Poplar St, Springfield'),
+('Mia Purple', 'mia.purple@example.com', '546 Redwood St, Springfield'),
+('Noah Orange', 'noah.orange@example.com', '657 Willow St, Springfield'),
+('Olivia Teal', 'olivia.teal@example.com', '768 Sycamore St, Springfield'),
+('Paul Aqua', 'paul.aqua@example.com', '879 Dogwood St, Springfield'),
+('Quinn Brown', 'quinn.brown@example.com', '980 Birchwood St, Springfield'),
+('Rita Indigo', 'rita.indigo@example.com', '1099 Blackberry St, Springfield');
 GO
 
-INSERT INTO Cars (Make, Model, Year, RentalRatePerDay)
-VALUES
-('Toyota', 'Corolla', 2020, 35.00),
-('Honda', 'Civic', 2021, 40.00),
-('Ford', 'Fusion', 2019, 45.00),
-('Chevrolet', 'Malibu', 2020, 50.00),
-('Nissan', 'Altima', 2021, 55.00),
-('Hyundai', 'Elantra', 2019, 38.00),
-('BMW', '3 Series', 2021, 120.00),
-('Mercedes-Benz', 'C-Class', 2020, 130.00),
-('Audi', 'A4', 2019, 110.00),
-('Tesla', 'Model 3', 2021, 150.00),
-('Toyota', 'Camry', 2018, 48.00),
-('Ford', 'Mustang', 2021, 75.00),
-('Chevrolet', 'Tahoe', 2019, 80.00),
-('Jeep', 'Wrangler', 2020, 85.00),
-('Kia', 'Optima', 2021, 42.00),
-('Subaru', 'Impreza', 2019, 39.00),
-('Volkswagen', 'Passat', 2020, 44.00),
-('Mazda', '6', 2021, 47.00),
-('Dodge', 'Charger', 2021, 65.00),
-('Honda', 'Accord', 2020, 50.00);
+INSERT INTO Cars (Make, Model, Year, RentalRatePerDay) VALUES
+('Toyota', 'Camry', 2020, 45.00),
+('Honda', 'Accord', 2021, 50.00),
+('Ford', 'Mustang', 2019, 60.00),
+('Chevrolet', 'Impala', 2018, 55.00),
+('Nissan', 'Altima', 2020, 48.00),
+('Hyundai', 'Sonata', 2021, 49.00),
+('Kia', 'Optima', 2019, 47.00),
+('Volkswagen', 'Passat', 2020, 53.00),
+('Subaru', 'Legacy', 2021, 54.00),
+('Mazda', '6', 2020, 52.00),
+('Dodge', 'Charger', 2019, 62.00),
+('Chrysler', '300', 2018, 58.00),
+('BMW', '3 Series', 2021, 70.00),
+('Audi', 'A4', 2020, 72.00),
+('Mercedes-Benz', 'C-Class', 2021, 75.00),
+('Lexus', 'ES', 2020, 68.00),
+('Porsche', 'Macan', 2021, 90.00),
+('Land Rover', 'Range Rover', 2019, 85.00),
+('Jaguar', 'XF', 2020, 80.00),
+('Volvo', 'S60', 2021, 65.00);
 GO
 
-INSERT INTO Rentals (CustomerID, CarID, RentalStartDate, RentalEndDate, TotalCost)
-VALUES
-(1, 3, '2024-10-01', '2024-10-07', 315.00),
-(2, 5, '2024-09-15', '2024-09-20', 275.00),
-(3, 2, '2024-09-05', '2024-09-12', 320.00),
-(4, 1, '2024-10-10', '2024-10-13', 105.00),
-(5, 8, '2024-09-01', '2024-09-05', 520.00),
-(6, 10, '2024-09-25', '2024-09-30', 900.00),
-(7, 9, '2024-10-05', '2024-10-10', 550.00),
-(8, 6, '2024-08-15', '2024-08-20', 190.00),
-(9, 4, '2024-09-20', '2024-09-25', 250.00),
-(10, 7, '2024-10-03', '2024-10-10', 840.00),
-(11, 12, '2024-09-28', '2024-10-03', 450.00),
-(12, 11, '2024-08-05', '2024-08-10', 240.00),
-(13, 13, '2024-09-10', '2024-09-15', 400.00),
-(14, 14, '2024-07-20', '2024-07-25', 425.00),
-(15, 15, '2024-08-10', '2024-08-14', 168.00),
-(16, 16, '2024-09-01', '2024-09-06', 195.00),
-(17, 17, '2024-10-01', '2024-10-07', 308.00),
-(18, 18, '2024-08-18', '2024-08-24', 282.00),
-(19, 19, '2024-09-15', '2024-09-20', 325.00),
-(20, 20, '2024-09-01', '2024-09-05', 200.00);
+INSERT INTO Rentals (RentalStartDate, RentalEndDate, TotalCost, CustomerID, CarID) VALUES
+('2024-10-01', '2024-10-05', 225.00, 1, 1),
+('2024-10-02', '2024-10-06', 300.00, 2, 2),
+('2024-10-03', '2024-10-07', 240.00, 3, 3),
+('2024-10-04', '2024-10-08', 220.00, 4, 4),
+('2024-10-05', '2024-10-09', 300.00, 5, 5),
+('2024-10-06', '2024-10-10', 290.00, 6, 6),
+('2024-10-07', '2024-10-11', 270.00, 7, 7),
+('2024-10-08', '2024-10-12', 260.00, 8, 8),
+('2024-10-09', '2024-10-13', 230.00, 9, 9),
+('2024-10-10', '2024-10-14', 300.00, 10, 10),
+('2024-10-11', '2024-10-15', 250.00, 11, 11),
+('2024-10-12', '2024-10-16', 240.00, 12, 12),
+('2024-10-13', '2024-10-17', 310.00, 13, 13),
+('2024-10-14', '2024-10-18', 275.00, 14, 14),
+('2024-10-15', '2024-10-19', 225.00, 15, 15),
+('2024-10-16', '2024-10-20', 280.00, 16, 16),
+('2024-10-17', '2024-10-21', 290.00, 17, 17),
+('2024-10-18', '2024-10-22', 300.00, 18, 18),
+('2024-10-19', '2024-10-23', 310.00, 19, 19),
+('2024-10-20', '2024-10-24', 225.00, 20, 20),
+('2024-10-21', '2024-10-25', 240.00, 1, 2);
 GO
+
+
+SELECT * FROM Rentals
 
 /*prueba*/
 SELECT r.RentalID, r.CustomerID, c.Name, r.CarID, ca.Make, ca.Model, r.RentalStartDate, r.RentalEndDate, r.TotalCost 

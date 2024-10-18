@@ -14,7 +14,7 @@ namespace DataAccessLayer.DbConnection
 
 		public SqlDataAccess()
 		{
-			_connectionString = "Data Source=U20210444\\U20210444;Initial Catalog=RentalCarDB;Integrated Security=True;Trust Server Certificate=True";
+			_connectionString = "Cadena de Conexion";
 		}
 
 		public IDbConnection GetConnection()

@@ -19,76 +19,62 @@ namespace DataAccessLayer.Repositories
             _dbConnection = new SqlDataAccess();
         }
 
-		public IEnumerable<Rentals> GetAllRentals(string search)
+		public IEnumerable<Rentals> GetAllRentals(string search, DateTime dateSearchInitial, DateTime dateSearchFinal)
 		{
 			using (var connection = _dbConnection.GetConnection())
 			{
-				string query = @"SELECT r.RentalID, r.CustomerID, c.Name, r.CarID, ca.Make, ca.Model, r.RentalStartDate, r.RentalEndDate, r.TotalCost 
+				DateTime date = DateTime.Now;
+				if (dateSearchFinal.ToString("yyyy-MM-dd") != date.ToString("yyyy-MM-dd"))
+				{
+					string query = @"SELECT r.RentalID, r.RentalStartDate, r.RentalEndDate, r.TotalCost, c.Name, ca.Make, ca.Model, c.CustomerID, ca.CarID
 								 FROM Rentals r
 								 INNER JOIN Customers c ON r.CustomerID = c.CustomerID
 								 INNER JOIN Cars ca ON r.CarID = ca.CarID
-								 WHERE c.Name LIKE @Search OR ca.Make LIKE @Search OR ca.Model LIKE @Search";
+								 WHERE (c.Name LIKE @Search 
+								 OR ca.Make LIKE @Search 
+								 OR ca.Model LIKE @Search)
+								 AND (r.RentalStartDate >= @DateSearchInitial) 
+								 AND (r.RentalStartDate <= @DateSearchFinal)";
 
+					var rentals = connection.Query<Rentals, Customers, Cars, Rentals>(query, (rental, customer, car) => {
+						rental.Customer = customer;
+						rental.Car = car;
+						return rental;
+					}, new { Search = "%" + search + "%", DateSearchInitial = dateSearchInitial, DateSearchFinal = dateSearchFinal },
+					splitOn: "CustomerID, CarID");
 
-				var rentals = connection.Query<Rentals, Customers, Cars, Rentals>(query, (rental, customer, car) => {
-					rental.Customer = customer;
-					rental.Car = car;
-					return rental;
-				}, new { Search = "%" + search + "%" },
-				splitOn: "CustomerID, CarID") ;
+					return rentals;
+				}
+				else
+				{
+					string query = @"SELECT r.RentalID, r.RentalStartDate, r.RentalEndDate, r.TotalCost, c.Name, ca.Make, ca.Model, r.CustomerID, r.CarID 
+								 FROM Rentals r
+								 INNER JOIN Customers c ON r.CustomerID = c.CustomerID
+								 INNER JOIN Cars ca ON r.CarID = ca.CarID
+								 WHERE (c.Name LIKE @Search 
+								 OR ca.Make LIKE @Search 
+								 OR ca.Model LIKE @Search)";
 
-				return rentals;
+					var rentals = connection.Query<Rentals, Customers, Cars, Rentals>(query, (rental, customer, car) => {
+						rental.Customer = customer;
+						rental.Car = car;
+						return rental;
+					}, new { Search = "%" + search + "%" },
+					splitOn: "CustomerID, CarID");
+
+					return rentals;
+				}
 			}
 		}
-
-		//public Rentals? GetById(int id)
-		//{
-		//	using (var connection = _dbConnection.GetConnection())
-		//	{
-		//		string query = @"SELECT r.RentalID, r.CustomerID, c.Name, r.CarID, ca.Make, ca.Model, r.RentalStartDate, r.RentalEndDate, r.TotalCost 
-		//						 FROM Rentals r
-		//						 INNER JOIN Customers c ON r.CustomerID = c.CustomerID
-		//						 INNER JOIN Cars ca ON r.CarID = ca.CarID
-		//						 WHERE RentalID = @RentalID";
-
-		//		return connection.QueryFirstOrDefault<Rentals>(query, new { RentalID = id});
-		//	}
-		//}
 
 		public void Add(Rentals rentals)
 		{
 			using (var connection = _dbConnection.GetConnection())
 			{
-				string query = "INSERT INTO Rentals VALUES(@CustomerID, @CarID, @RentalStartDate, @RentalEndDate, @TotalCost)";
+				string query = "INSERT INTO Rentals VALUES(@RentalStartDate, @RentalEndDate, @TotalCost, @CustomerID, @CarID)";
 
-				connection.Execute(query, new { rentals.CustomerID, rentals.CarID, rentals.RentalStartDate, rentals.RentalEndDate, rentals.TotalCost });
+				connection.Execute(query, new { rentals.RentalStartDate, rentals.RentalEndDate, rentals.TotalCost, rentals.CustomerID, rentals.CarID });
 			}
 		}
-
-		//public void Edit(Rentals rentals)
-		//{
-		//	using (var connection = _dbConnection.GetConnection())
-		//	{
-		//		string query = @"UPDATE Rentals 
-  //                              SET CustomerID = @CustomerID,
-  //                                  CarID = @CarID,
-		//							RentalStartDate = @RentalStartDate,
-		//							RentalEndDate = @RentalEndDate,
-		//							TotalCost = @TotalCost,
-  //                                  WHERE RentalID = @RentalID";
-
-		//		connection.Execute(query, rentals);
-		//	}
-		//}
-
-		//public void Delete(int id)
-		//{
-		//	using (var connection = _dbConnection.GetConnection())
-		//	{
-		//		string query = "DELETE FROM Rentals WHERE RentalID = @RentalID";
-
-		//		connection.Execute(query, new { id });
-		//	}
-		//}
 	}
 }
